@@ -1,13 +1,261 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
+// SaaS PM — Prisma schema (SQLite for local demo; set DATABASE_URL to a PostgreSQL URL in production — see README)
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum MemberRole {
+  OWNER
+  ADMIN
+  MANAGER
+  DEVELOPER
+  MEMBER
+  VIEWER
+}
+
+model TaskComment {
+  id        String   @id @default(cuid())
+  taskId     String
+  projectId  String
+  authorId   String
+  message    String
+  createdAt  DateTime @default(now())
+
+  task    Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  author  User    @relation("TaskCommentAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  image        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  ownedProjects Project[]        @relation("ProjectOwner")
+  memberships ProjectMember[]
+  tasksAssigned Task[]           @relation("TaskAssignee")
+  activities  Activity[]
+  transitions TaskTransition[]   @relation("TransitionMovedBy")
+  comments    TaskComment[]      @relation("TaskCommentAuthor")
+  notifications Notification[]
+  organizationMemberships OrganizationMember[]
+  savedFilters SavedFilter[]
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  name        String
+  description String   @default("")
+  color       String   @default("#6366f1")
+  workflowStrict Boolean @default(true)
+  /// JSON: { edges: { from: TaskStatus, to: TaskStatus }[], allowTodoToDoneSkip: boolean }
+  workflowConfig String @default("{}")
+  ownerId     String
+  owner       User     @relation("ProjectOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  organizationId String?
+  organization Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members    ProjectMember[]
+  tasks      Task[]
+  activities Activity[]
+  transitions TaskTransition[]
+  comments    TaskComment[]
+  savedFilters SavedFilter[]
+  webhooks WebhookSubscription[]
+  automations AutomationRule[]
+}
+
+model ProjectMember {
+  id        String     @id @default(cuid())
+  projectId String
+  userId    String
+  role      MemberRole @default(DEVELOPER)
+  createdAt DateTime   @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId])
+}
+
+model Task {
+  id          String       @id @default(cuid())
+  title       String
+  description String       @default("")
+  status      TaskStatus   @default(TODO)
+  priority    TaskPriority @default(MEDIUM)
+  position    Int          @default(0)
+  projectId   String
+  assigneeId  String?
+  dueDate     DateTime?
+  /// JSON array of label strings, e.g. ["frontend","urgent"]
+  labels      String       @default("[]")
+  /// JSON array of { "id": string, "text": string, "done": boolean }
+  acceptanceCriteria String @default("[]")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  assignee User?   @relation("TaskAssignee", fields: [assigneeId], references: [id], onDelete: SetNull)
+  transitions TaskTransition[]
+  comments    TaskComment[]
+
+  @@index([projectId, status])
+  @@index([dueDate])
+}
+
+model TaskTransition {
+  id             String     @id @default(cuid())
+  taskId          String
+  projectId       String
+  fromStatus      TaskStatus
+  toStatus        TaskStatus
+  movedById       String
+  feedback        String
+  issueFaced      String
+  acceptanceNote  String
+  reopenReason    String?
+  overrideApplied Boolean    @default(false)
+  metadata        String     @default("{}")
+  movedAt         DateTime   @default(now())
+
+  task     Task    @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  movedBy  User    @relation("TransitionMovedBy", fields: [movedById], references: [id], onDelete: Cascade)
+  project  Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, movedAt])
+  @@index([projectId, movedAt])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  projectId String?
+  taskId    String?
+  userId    String
+  type      String
+  message   String
+  meta      String   @default("{}")
+  createdAt DateTime @default(now())
+
+  project Project? @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([createdAt])
+  @@index([taskId])
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  body      String    @default("")
+  link      String?
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt])
+  @@index([userId, createdAt])
+}
+
+model Organization {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  members  OrganizationMember[]
+  projects Project[]
+  invites  WorkspaceInvite[]
+}
+
+model OrganizationMember {
+  id             String   @id @default(cuid())
+  organizationId String
+  userId         String
+  role           String   @default("MEMBER")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, userId])
+}
+
+model WorkspaceInvite {
+  id             String   @id @default(cuid())
+  organizationId String
+  email          String
+  token          String   @unique
+  role           String   @default("MEMBER")
+  expiresAt      DateTime
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model SavedFilter {
+  id        String   @id @default(cuid())
+  projectId String
+  userId    String
+  name      String
+  query     String   @default("{}")
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([projectId, userId, name])
+}
+
+model WebhookSubscription {
+  id        String   @id @default(cuid())
+  projectId String
+  url       String
+  secret    String   @default("")
+  events    String   @default("[]")
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+}
+
+model AutomationRule {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  trigger   String
+  action    String
+  payload   String   @default("{}")
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
