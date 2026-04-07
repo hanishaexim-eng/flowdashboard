@@ -18,13 +18,13 @@
 - Cause: role lacks `member.manage`.
 - Fix: use Owner/Admin/Manager account.
 
-## Pre-demo Checklist
+## Pre-walkthrough Checklist
 
 1. `npm run db:reset`
 2. `npm run db:seed`
 3. `npm run demo:check`
 4. `npm run build`
-5. Login as `demo@flowboard.app`
+5. Login as `admin@flowboard.demo`
 6. Verify `/dashboard/admin` loads
 
 ## Fast Recovery

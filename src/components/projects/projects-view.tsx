@@ -76,7 +76,7 @@ export function ProjectsView({ initialProjects }: { initialProjects: ProjectRow[
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full min-w-0 space-y-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 className="text-sm font-medium text-muted-foreground">Your workspace</h2>

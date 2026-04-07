@@ -17,6 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { projectMemberRoleLabel } from "@/lib/member-role-label";
 
 type MemberRow = {
   id: string;
@@ -158,7 +160,7 @@ export function TeamView({
   }
 
   return (
-    <div className="grid gap-6 lg:grid-cols-3">
+    <div className="grid w-full min-w-0 gap-6 lg:grid-cols-3">
       <Card className="lg:col-span-1">
         <CardHeader>
           <CardTitle className="text-base">Project</CardTitle>
@@ -232,35 +234,40 @@ export function TeamView({
             members.map((m) => (
               <div
                 key={m.id}
-                className="flex items-center justify-between gap-3 rounded-lg border bg-card/40 px-3 py-2"
+                className="flex flex-col gap-3 rounded-lg border bg-card/40 px-3 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-3"
               >
-                <div className="flex items-center gap-3">
-                  <Avatar className="size-9">
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  <Avatar className="size-9 shrink-0">
                     <AvatarFallback className="text-xs">{initials(m.user.name)}</AvatarFallback>
                   </Avatar>
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{m.user.name}</p>
                     <p className="truncate text-xs text-muted-foreground">{m.user.email}</p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex shrink-0 items-center justify-end gap-2 sm:justify-start">
                   {m.role === MemberRole.OWNER ? (
-                    <span className="text-xs text-muted-foreground">{m.role}</span>
+                    <Badge
+                      variant="outline"
+                      className="border-primary/30 bg-primary/8 font-normal text-primary"
+                    >
+                      {projectMemberRoleLabel(m.role)}
+                    </Badge>
                   ) : (
                     <Select
                       value={m.role}
                       onValueChange={(v) => void handleRoleChange(m.user.id, v as MemberRole)}
                       disabled={updatingId === m.user.id || !canManageMembers}
                     >
-                      <SelectTrigger className="h-8 w-[130px]">
+                      <SelectTrigger className="h-8 w-full min-w-0 sm:w-[152px]">
                         <SelectValue placeholder="Role" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value={MemberRole.ADMIN}>ADMIN</SelectItem>
-                        <SelectItem value={MemberRole.MANAGER}>MANAGER</SelectItem>
-                        <SelectItem value={MemberRole.DEVELOPER}>DEVELOPER</SelectItem>
-                        <SelectItem value={MemberRole.MEMBER}>MEMBER</SelectItem>
-                        <SelectItem value={MemberRole.VIEWER}>VIEWER</SelectItem>
+                        <SelectItem value={MemberRole.ADMIN}>{projectMemberRoleLabel(MemberRole.ADMIN)}</SelectItem>
+                        <SelectItem value={MemberRole.MANAGER}>{projectMemberRoleLabel(MemberRole.MANAGER)}</SelectItem>
+                        <SelectItem value={MemberRole.DEVELOPER}>{projectMemberRoleLabel(MemberRole.DEVELOPER)}</SelectItem>
+                        <SelectItem value={MemberRole.MEMBER}>{projectMemberRoleLabel(MemberRole.MEMBER)}</SelectItem>
+                        <SelectItem value={MemberRole.VIEWER}>{projectMemberRoleLabel(MemberRole.VIEWER)}</SelectItem>
                       </SelectContent>
                     </Select>
                   )}

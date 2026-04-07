@@ -20,12 +20,18 @@ export const metadata: Metadata = {
     template: "%s · FlowBoard",
   },
   description:
-    "Production-style SaaS project management demo: dashboards, Kanban, analytics, and team collaboration.",
+    "Production-style SaaS project management: dashboards, Kanban, analytics, and team collaboration.",
   openGraph: {
     title: "FlowBoard",
     description:
-      "Manage your startup projects faster — a premium Next.js + Prisma + NextAuth demo.",
+      "Manage your startup projects faster — a premium Next.js + Prisma + NextAuth experience.",
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({

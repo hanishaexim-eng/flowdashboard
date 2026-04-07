@@ -26,10 +26,10 @@ export default async function DashboardLayout({
   );
 
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="flex min-h-screen w-full min-w-0 bg-background">
       <AppSidebarDesktop allowedScreens={allowedScreens} />
       <AppSidebarMobile allowedScreens={allowedScreens} />
-      <div className="flex min-h-screen flex-1 flex-col">{children}</div>
+      <div className="flex min-h-screen w-full min-w-0 flex-1 flex-col">{children}</div>
     </div>
   );
 }

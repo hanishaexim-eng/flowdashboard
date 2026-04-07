@@ -8,7 +8,7 @@ import Link from "next/link";
 export const metadata = {
   title: "FlowBoard — Manage your startup projects faster",
   description:
-    "A production-style SaaS workspace demo: projects, Kanban, analytics, and team collaboration.",
+    "A production-style SaaS workspace: projects, Kanban, analytics, and team collaboration.",
 };
 
 const features = [
@@ -29,7 +29,7 @@ const features = [
   },
   {
     title: "Analytics without the bloat",
-    description: "Trend lines and progress bars that tell a story — perfect for demos and pitches.",
+    description: "Trend lines and progress bars that tell a story — perfect for reviews and pitches.",
     icon: LineChart,
   },
   {
@@ -57,7 +57,7 @@ export default function LandingPage() {
             <div className="mx-auto max-w-3xl text-center">
               <p className="inline-flex items-center gap-2 rounded-full border bg-card/60 px-3 py-1 text-xs text-muted-foreground shadow-sm backdrop-blur">
                 <span className="inline-flex size-1.5 rounded-full bg-primary" />
-                Built for US startup demos · App Router · Prisma · NextAuth
+                App Router · Prisma · NextAuth
               </p>
               <h1 className="mt-6 text-balance text-4xl font-semibold tracking-tight sm:text-5xl">
                 Manage your startup projects faster
@@ -87,8 +87,8 @@ export default function LandingPage() {
                 </Link>
               </div>
               <p className="mt-4 text-xs text-muted-foreground">
-                Demo seed account: <span className="font-mono">demo@flowboard.app</span> /{" "}
-                <span className="font-mono">demo1234</span>
+                Seeded account: <span className="font-mono">admin@flowboard.demo</span> /{" "}
+                <span className="font-mono">admin</span>
               </p>
             </div>
 
@@ -119,7 +119,7 @@ export default function LandingPage() {
 
               <Card className="border bg-card/60 shadow-sm backdrop-blur">
                 <CardHeader>
-                  <CardTitle className="text-base">Why teams pick this demo</CardTitle>
+                  <CardTitle className="text-base">Why teams pick FlowBoard</CardTitle>
                   <CardDescription>Clean architecture, scalable folders, and UI craft.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3 text-sm text-muted-foreground">
@@ -138,7 +138,7 @@ export default function LandingPage() {
             <div className="mx-auto max-w-2xl text-center">
               <h2 className="text-2xl font-semibold tracking-tight">Everything you need to sell the vision</h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                Feature-rich, but still understandable — the sweet spot for client demos.
+                Feature-rich, but still understandable — the sweet spot for stakeholder walkthroughs.
               </p>
             </div>
 
@@ -173,7 +173,7 @@ export default function LandingPage() {
         </section>
 
         <footer className="border-t py-10 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} FlowBoard demo — built with Next.js + Prisma + Tailwind.
+          © {new Date().getFullYear()} FlowBoard — built with Next.js + Prisma + Tailwind.
         </footer>
       </main>
     </div>

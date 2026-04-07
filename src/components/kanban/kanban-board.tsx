@@ -659,7 +659,7 @@ export function KanbanBoard({
       onDragCancel={handleDragCancel}
       onDragEnd={handleDragEnd}
     >
-      <div className="space-y-3">
+      <div className="w-full min-w-0 space-y-3">
         <div className="flex flex-col gap-3 rounded-xl border border-border/80 bg-muted/20 p-3 sm:p-4">
           <div className="flex flex-wrap items-center gap-2">
             <Input

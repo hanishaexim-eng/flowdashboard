@@ -14,10 +14,10 @@ async function main() {
   ]);
 
   if (users === 0 || projects === 0) {
-    throw new Error("Database looks empty. Run migrations and seed before demo.");
+    throw new Error("Database looks empty. Run migrations and seed sample data.");
   }
 
-  console.log("Demo health check passed.");
+  console.log("Seed data health check passed.");
   console.log(`Users: ${users}`);
   console.log(`Projects: ${projects}`);
   console.log(`Tasks: ${tasks}`);
@@ -28,7 +28,7 @@ main()
     await prisma.$disconnect();
   })
   .catch(async (error) => {
-    console.error("Demo health check failed:", error);
+    console.error("Seed data health check failed:", error);
     await prisma.$disconnect();
     process.exit(1);
   });

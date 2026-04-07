@@ -38,7 +38,7 @@ export function WorkspaceClient({ initialOrgs }: { initialOrgs: OrgRow[] }) {
   }
 
   return (
-    <div className="space-y-6 max-w-lg">
+    <div className="w-full min-w-0 space-y-6 max-w-lg">
       <div className="rounded-lg border p-4">
         <h2 className="text-sm font-medium">Your organizations</h2>
         <ul className="mt-2 space-y-2 text-sm">

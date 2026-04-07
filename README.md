@@ -12,7 +12,7 @@ npm install
 
 ### 2) Configure environment
 
-Copy `.env.example` to `.env` (or keep the provided `.env` for local SQLite demo mode).
+Copy `.env.example` to `.env` (or keep the provided `.env` for local SQLite mode).
 
 Required variables:
 
@@ -20,7 +20,7 @@ Required variables:
 - `AUTH_SECRET`
 - `AUTH_URL`
 
-### 3) Set up database and seed demo data
+### 3) Set up database and seed sample data
 
 ```bash
 npm run db:migrate
@@ -35,13 +35,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Demo Credentials
+## Seeded Credentials
 
-After `npm run db:seed`, accounts use `@flowboard.demo` with readable local parts (for example `admin@flowboard.demo` / `admin`, `pm@flowboard.demo` / `pm`, `viewer@flowboard.demo` / `viewer`).
+After `npm run db:seed`, accounts use `@flowboard.demo` with name-based local parts (for example `admin@flowboard.demo` / `admin`, `rohan.kumar@flowboard.demo` / `rohan.kumar`, `divya.nair@flowboard.demo` / `divya.nair`).
 
-The login page lists and can auto-fill every seeded demo account with its password.
+The login page lists and can auto-fill every seeded account with its password.
 
-## Demo Flow (Suggested)
+## Suggested walkthrough
 
 1. Log in as `admin@flowboard.demo` (or another seeded account).
 2. Go to `Projects`, create or open a board.
@@ -96,7 +96,7 @@ Dashboard split:
 - `/dashboard` adapts cards for admin/manager governance context.
 - `/dashboard/admin` provides governance KPIs (flow quality, reopens, overrides).
 
-## Support Runbook (Pre-demo)
+## Support Runbook (Pre-walkthrough)
 
 ### T-30 min checks
 
@@ -113,14 +113,14 @@ npm run db:seed
 npm run demo:check
 ```
 
-### During demo fallback
+### During walkthrough fallback
 
-- Keep one browser tab logged in as `demo@flowboard.app`.
+- Keep one browser tab logged in as `admin@flowboard.demo`.
 - Keep `npm run db:reset && npm run db:seed` ready for fast recovery.
 
-## Governance Demo Script
+## Governance Walkthrough Script
 
-1. Login as `demo@flowboard.app`.
+1. Login as `admin@flowboard.demo`.
 2. Open `/dashboard/projects` and enter a board.
 3. Move a task from `TODO` to `IN_PROGRESS`; fill mandatory transition fields.
 4. Move a task to `DONE`; show transition records in task details.
@@ -137,13 +137,13 @@ npm run demo:check
 - `npm run lint` - run ESLint
 - `npm run db:migrate` - run Prisma migrations
 - `npm run db:reset` - reset DB and apply migrations
-- `npm run db:seed` - seed demo data
-- `npm run demo:check` - verify demo data health
+- `npm run db:seed` - seed sample data
+- `npm run demo:check` - verify seeded data health
 - `npm run test:e2e` - Playwright smoke tests (requires `npm run build` first for `next start`)
 
 ## Production database
 
-Point `DATABASE_URL` at PostgreSQL (Neon, RDS, Supabase, etc.) and run `npx prisma migrate deploy` in CI/CD before deploy. SQLite is intended for local demo only.
+Point `DATABASE_URL` at PostgreSQL (Neon, RDS, Supabase, etc.) and run `npx prisma migrate deploy` in CI/CD before deploy. SQLite is intended for local use only.
 
 ## Observability
 

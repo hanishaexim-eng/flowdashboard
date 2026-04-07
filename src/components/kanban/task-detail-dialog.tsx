@@ -309,7 +309,7 @@ export function TaskDetailDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex max-h-[90vh] flex-col overflow-hidden sm:max-w-2xl">
+      <DialogContent className="flex max-h-[min(90dvh,calc(100vh-2rem))] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] min-w-0 flex-col overflow-hidden p-3 sm:max-h-[90vh] sm:w-full sm:max-w-2xl sm:p-6">
         <DialogHeader>
           <DialogTitle>Task details</DialogTitle>
           <DialogDescription>
@@ -317,7 +317,7 @@ export function TaskDetailDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid flex-1 gap-4 overflow-y-auto py-2 pr-1">
+        <div className="grid min-h-0 flex-1 gap-4 overflow-y-auto py-2 pr-1">
           <div className="grid gap-2">
             <Label htmlFor="task-title">Title</Label>
             <Input

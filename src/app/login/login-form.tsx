@@ -106,11 +106,7 @@ export function LoginForm() {
 
         <Card className="border bg-muted/30 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base">Demo accounts</CardTitle>
-            <CardDescription>
-              Run <code className="rounded bg-muted px-1 text-xs">npm run db:seed</code> locally. Password
-              matches the user id (e.g. <code className="text-xs">user4</code> for user4@gmail.com).
-            </CardDescription>
+            <CardTitle className="text-base">Seeded accounts</CardTitle>
           </CardHeader>
           <CardContent className="max-h-80 overflow-y-auto text-xs">
             <ul className="space-y-2">

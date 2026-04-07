@@ -45,7 +45,7 @@ export function DashboardHeader({
   const toggleMobileNav = useUiStore((s) => s.toggleMobileNav);
 
   return (
-    <header className="sticky top-0 z-30 flex h-14 items-center gap-3 border-b border-border/80 bg-app-header px-4 backdrop-blur supports-[backdrop-filter]:bg-app-header/90 lg:px-6">
+    <header className="sticky top-0 z-30 flex h-14 w-full min-w-0 items-center gap-2 border-b border-border/80 bg-app-header px-3 backdrop-blur supports-[backdrop-filter]:bg-app-header/90 sm:gap-3 sm:px-4 lg:px-6">
       <Button
         variant="outline"
         size="icon"

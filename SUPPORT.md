@@ -1,8 +1,8 @@
 # FlowBoard support playbook
 
-Use this for demos, internal pilots, and first production cutovers.
+Use this for walkthroughs, internal pilots, and first production cutovers.
 
-## Before a demo
+## Before a walkthrough
 
 1. Run `npm run build` and fix any errors.
 2. Run `npm run demo:check` if available in your branch.
@@ -17,14 +17,14 @@ npm run db:seed
 
 Note: `db:reset` is destructive. Do not run against production databases.
 
-## During a demo
+## During a walkthrough
 
-- Keep one browser profile logged in as your primary demo account.
+- Keep one browser profile logged in as your primary seeded account.
 - If the app misbehaves, restart `npm run dev` and retry before resetting the DB.
 - Use role-specific accounts to validate access segregation:
   - `admin@flowboard.demo` / `admin` for full access
-  - `pm@flowboard.demo` / `pm` for manager-level project operations
-  - `viewer@flowboard.demo` / `viewer` for viewer-level restricted navigation
+  - `rohan.kumar@flowboard.demo` / `rohan.kumar` for manager-level project operations
+  - `divya.nair@flowboard.demo` / `divya.nair` for viewer-level restricted navigation
 
 ## Access troubleshooting
 

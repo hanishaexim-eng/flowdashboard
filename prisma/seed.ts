@@ -20,7 +20,7 @@ const P10 = "seed-project-edtech";
 
 const ALL_PROJECT_IDS = [P1, P2, P3, P4, P5, P6, P7, P8, P9, P10];
 
-/** Password = value shown (same as local part for most roles). */
+/** Admin uses `admin`; team members use `firstname.lastname` as password (matches email local part). */
 const DEMO_ADMIN = {
   email: "admin@flowboard.demo",
   password: "admin",
@@ -29,27 +29,65 @@ const DEMO_ADMIN = {
 
 /** Order matches u(1)…u(15) in project memberships below. */
 const DEMO_TEAM = [
-  { email: "pm@flowboard.demo", password: "pm", name: "Rohan Kumar" },
-  { email: "engineer@flowboard.demo", password: "engineer", name: "Meera Nair" },
-  { email: "developer@flowboard.demo", password: "developer", name: "Arjun Das" },
-  { email: "support@flowboard.demo", password: "support", name: "Kavya Singh" },
-  { email: "design@flowboard.demo", password: "design", name: "Ananya Desai" },
-  { email: "data@flowboard.demo", password: "data", name: "Rahul Verma" },
-  { email: "health@flowboard.demo", password: "health", name: "Dr. Priya Menon" },
-  { email: "finance@flowboard.demo", password: "finance", name: "Sanjay Iyer" },
-  { email: "retail@flowboard.demo", password: "retail", name: "Neha Kapoor" },
-  { email: "mfg@flowboard.demo", password: "mfg", name: "Deepak Rao" },
-  { email: "edu@flowboard.demo", password: "edu", name: "Ishita Bose" },
-  { email: "legal@flowboard.demo", password: "legal", name: "Karan Malhotra" },
-  { email: "marketing@flowboard.demo", password: "marketing", name: "Sneha Reddy" },
-  { email: "qa@flowboard.demo", password: "qa", name: "Amit Joshi" },
-  { email: "viewer@flowboard.demo", password: "viewer", name: "Divya Nair" },
+  { email: "rohan.kumar@flowboard.demo", password: "rohan.kumar", name: "Rohan Kumar" },
+  { email: "meera.nair@flowboard.demo", password: "meera.nair", name: "Meera Nair" },
+  { email: "arjun.das@flowboard.demo", password: "arjun.das", name: "Arjun Das" },
+  { email: "kavya.singh@flowboard.demo", password: "kavya.singh", name: "Kavya Singh" },
+  { email: "ananya.desai@flowboard.demo", password: "ananya.desai", name: "Ananya Desai" },
+  { email: "rahul.verma@flowboard.demo", password: "rahul.verma", name: "Rahul Verma" },
+  { email: "priya.menon@flowboard.demo", password: "priya.menon", name: "Dr. Priya Menon" },
+  { email: "sanjay.iyer@flowboard.demo", password: "sanjay.iyer", name: "Sanjay Iyer" },
+  { email: "neha.kapoor@flowboard.demo", password: "neha.kapoor", name: "Neha Kapoor" },
+  { email: "deepak.rao@flowboard.demo", password: "deepak.rao", name: "Deepak Rao" },
+  { email: "ishita.bose@flowboard.demo", password: "ishita.bose", name: "Ishita Bose" },
+  { email: "karan.malhotra@flowboard.demo", password: "karan.malhotra", name: "Karan Malhotra" },
+  { email: "sneha.reddy@flowboard.demo", password: "sneha.reddy", name: "Sneha Reddy" },
+  { email: "amit.joshi@flowboard.demo", password: "amit.joshi", name: "Amit Joshi" },
+  { email: "divya.nair@flowboard.demo", password: "divya.nair", name: "Divya Nair" },
 ] as const;
 
 const LEGACY_DEMO_EMAILS = [
   "adminuser@gmail.com",
   ...Array.from({ length: 15 }, (_, i) => `user${i + 1}@gmail.com`),
 ];
+
+/** Previous role-based seed emails (delete on re-seed so DB does not keep stale users). */
+const LEGACY_ROLE_BASED_EMAILS = [
+  "pm@flowboard.demo",
+  "engineer@flowboard.demo",
+  "developer@flowboard.demo",
+  "support@flowboard.demo",
+  "design@flowboard.demo",
+  "data@flowboard.demo",
+  "health@flowboard.demo",
+  "finance@flowboard.demo",
+  "retail@flowboard.demo",
+  "mfg@flowboard.demo",
+  "edu@flowboard.demo",
+  "legal@flowboard.demo",
+  "marketing@flowboard.demo",
+  "qa@flowboard.demo",
+  "viewer@flowboard.demo",
+] as const;
+
+/** Optional: prior experimental `firstname+tag@` seeds — safe to delete if absent. */
+const LEGACY_PLUS_TAG_EMAILS = [
+  "rohan+q2launch@flowboard.demo",
+  "meera+mobile@flowboard.demo",
+  "arjun+growth@flowboard.demo",
+  "kavya+support@flowboard.demo",
+  "ananya+edtech@flowboard.demo",
+  "rahul+data@flowboard.demo",
+  "priya+healthcare@flowboard.demo",
+  "sanjay+fintech@flowboard.demo",
+  "neha+retail@flowboard.demo",
+  "deepak+manufacturing@flowboard.demo",
+  "ishita+edtech@flowboard.demo",
+  "karan+healthcare@flowboard.demo",
+  "sneha+retail@flowboard.demo",
+  "amit+mobile@flowboard.demo",
+  "divya+healthcare@flowboard.demo",
+] as const;
 
 const ALL_DEMO_EMAILS = [DEMO_ADMIN.email, ...DEMO_TEAM.map((t) => t.email)];
 
@@ -99,7 +137,11 @@ async function main() {
   await prisma.organizationMember.deleteMany({});
   await prisma.organization.deleteMany({});
   await prisma.user.deleteMany({
-    where: { email: { in: [...ALL_DEMO_EMAILS, ...LEGACY_DEMO_EMAILS] } },
+    where: {
+      email: {
+        in: [...ALL_DEMO_EMAILS, ...LEGACY_DEMO_EMAILS, ...LEGACY_ROLE_BASED_EMAILS, ...LEGACY_PLUS_TAG_EMAILS],
+      },
+    },
   });
 
   const adminHash = await hash(DEMO_ADMIN.password, 12);
@@ -127,7 +169,7 @@ async function main() {
 
   const demoOrg = await prisma.organization.create({
     data: {
-      name: "FlowBoard Demo",
+      name: "FlowBoard",
       slug: "flowboard-demo",
     },
   });
@@ -341,11 +383,11 @@ async function main() {
       labels: ["api"],
     },
     {
-      title: "Seed data for demo environments",
+      title: "Seed data for staging environments",
       description: "Realistic multi-industry tasks and users.",
       status: TaskStatus.IN_PROGRESS,
       priority: TaskPriority.LOW,
-      labels: ["demo"],
+      labels: ["seed"],
     },
     {
       title: "Export audit trail CSV",
@@ -601,7 +643,7 @@ async function main() {
   });
 
   console.log(
-    "Seed done. 16 accounts @ flowboard.demo (admin + pm, engineer, … viewer). Passwords match login page list.",
+    "Seed done. 16 accounts @ flowboard.demo (admin + name-based team emails). Passwords match the login page list.",
   );
 }
 
